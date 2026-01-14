@@ -15,7 +15,7 @@ spec:
   project: kid-livraison
   
   source:
-    repoURL: https://github.com/VOTRE_ORG/VOTRE_REPO.git  # À MODIFIER
+    repoURL: https://gitlab.com/kidistribution/app-kid.git  # À MODIFIER
     targetRevision: main
     path: gitops/overlays/prod
   

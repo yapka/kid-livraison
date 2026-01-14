@@ -12,7 +12,7 @@ spec:
   project: kid-livraison
   
   source:
-    repoURL: https://github.com/VOTRE_ORG/VOTRE_REPO.git  # À MODIFIER
+    repoURL: https://gitlab.com/kidistribution/test_kid.git 
     targetRevision: develop
     path: gitops/overlays/dev
   
