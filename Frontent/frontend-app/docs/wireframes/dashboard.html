@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wireframe Dashboard — Livraison</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:0;padding:20px;background:#f6f7f9}
+    .header{display:flex;align-items:center;justify-content:space-between}
+    .kpis{display:flex;gap:12px;margin-top:16px}
+    .card{background:#fff;padding:18px;border-radius:6px;box-shadow:0 1px 0 rgba(0,0,0,0.05);flex:1}
+    .placeholder{height:200px;background:#eee;border-radius:4px;margin-top:12px}
+    .list{margin-top:16px;background:#fff;padding:12px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Dashboard — Livraison</h1>
+    <div>Filtres: <small>date ▾ | zone ▾ | livreur ▾</small></div>
+  </div>
+
+  <div class="kpis">
+    <div class="card">Livraisons aujourd'hui<br><strong>124</strong></div>
+    <div class="card">En transit<br><strong>32</strong></div>
+    <div class="card">En retard<br><strong>8</strong></div>
+    <div class="card">% à l'heure<br><strong>92%</strong></div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:16px">
+    <div style="flex:2" class="card">
+      <div>Graphique tendance</div>
+      <div class="placeholder"></div>
+    </div>
+    <div style="flex:1" class="card">
+      <div>Top zones / livreurs</div>
+      <div class="placeholder" style="height:120px"></div>
+    </div>
+  </div>
+
+  <div class="list">
+    <h3>Livraisons récentes</h3>
+    <div class="placeholder" style="height:140px"></div>
+  </div>
+</body>
+</html>

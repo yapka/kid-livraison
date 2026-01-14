@@ -1,0 +1,27 @@
+# Dockerfile simplifié pour tests locaux (sans build-essential)
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# Copier requirements et installer (utilise wheels pré-compilés)
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copier le code
+COPY . /app
+
+# Créer un utilisateur non-root
+RUN useradd -m -u 1000 yapka && \
+    chown -R yapka:yapka /app
+
+USER yapka
+
+EXPOSE 8000
+
+# Commande de démarrage
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

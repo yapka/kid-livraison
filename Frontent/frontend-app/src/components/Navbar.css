@@ -1,0 +1,341 @@
+:root {
+  --color-primary: var(--primary-color);
+  /* inherit global primary */
+  --color-secondary: #10B981;
+  /* Vert succès */
+  --color-accent: #F59E0B;
+  /* Orange notifications */
+  --color-danger: #EF4444;
+  /* Rouge alertes */
+  --bg: #FFFFFF;
+  /* Fond principal */
+  --bg-2: #F9FAFB;
+  /* Fond secondaire */
+  --text: #111827;
+  /* Texte principal */
+  --text-muted: #6B7280;
+  /* Texte secondaire */
+  --border: #E5E7EB;
+  /* Bordures */
+}
+
+/* Global navbar */
+.app-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-link {
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none
+}
+
+.toggler {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  font-size: 18px;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  align-items: center
+}
+
+.nav-link {
+  color: var(--text);
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: 500
+}
+
+.nav-link:hover {
+  background: var(--bg-2)
+}
+
+.nav-link.active {
+  background: var(--color-primary);
+  color: white
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+.user-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 600
+}
+
+.user-menu {
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px;
+  min-width: 160px
+}
+
+.user-menu-item {
+  display: block;
+  padding: 8px 12px;
+  color: var(--text);
+  text-decoration: none
+}
+
+/* Notifications */
+/* Notification UI removed — styles deprecated */
+/* .notif-btn and .badge-accent removed */
+
+/* Sidebar */
+.app-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 60
+}
+
+.app-sidebar.collapsed {
+  width: 72px
+}
+
+.sidebar-top {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between
+}
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none
+}
+
+.sidebar-link .link-text {
+  white-space: nowrap
+}
+
+.sidebar-link:hover {
+  background: var(--bg-2)
+}
+
+.sidebar-link.active {
+  background: var(--color-primary);
+  color: white
+}
+
+/* Submenu toggle buttons */
+.sidebar-submenu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  outline: none
+}
+
+.sidebar-submenu-toggle:hover {
+  background: var(--bg-2)
+}
+
+.sidebar-submenu-toggle:focus {
+  outline: none;
+  box-shadow: none
+}
+
+/* Submenu containers */
+.sidebar-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+  border-left: 2px solid var(--border);
+  margin-left: 6px
+}
+
+.sidebar-submenu .sidebar-link {
+  padding: 8px 10px;
+  font-size: 14px
+}
+
+.sidebar-actions {
+  margin-top: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.user-initial {
+  background: var(--bg-2);
+  color: var(--text);
+  padding: 6px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700
+}
+
+/* Collapsed state: hide link text */
+.app-sidebar.collapsed .link-text {
+  display: none
+}
+
+.app-sidebar.collapsed .brand-link {
+  font-size: 14px
+}
+
+.app-sidebar.collapsed .user-name {
+  display: none
+}
+
+.app-sidebar.collapsed .sidebar-submenu {
+  display: none
+}
+
+/* Mobile */
+.topbar-mobile {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 56px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  z-index: 60
+}
+
+.topbar-mobile .toggler {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 6px;
+  border-radius: 4px
+}
+
+.brand-mobile .brand-link {
+  font-weight: 700;
+  color: var(--color-primary)
+}
+
+@media (max-width:720px) {
+  .toggler {
+    display: inline-block
+  }
+
+  .app-sidebar {
+    transform: translateX(-110%);
+    transition: transform .22s ease-in-out;
+    z-index: 70
+  }
+
+  .app-sidebar.mobile-open {
+    transform: translateX(0)
+  }
+
+  .topbar-mobile {
+    display: flex
+  }
+
+  /* hide center search on small screens to save space */
+  .app-navbar .flex-1 {
+    display: none
+  }
+
+  /* overlay when mobile menu is open */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 50
+  }
+
+  .sidebar-overlay.show {
+    display: block
+  }
+
+  /* when mobile sidebar is open prevent background scroll on body */
+  body.sidebar-mobile-open {
+    overflow: hidden
+  }
+}
+
+/* touch-friendly sidebar links */
+.sidebar-link {
+  padding: 12px
+}
+
+.nav-link {
+  padding: 12px
+}
+
+
+/* Notifications dropdown simplified */
+/* Notification dropdown styles removed — notifications are disabled for now */
+
+/* Remove blue outline on all buttons and inputs */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+button:focus-visible {
+  outline: 2px solid transparent;
+}

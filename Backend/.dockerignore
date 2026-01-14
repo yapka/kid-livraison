@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+env
+venv
+.venv
+.git
+.gitlab-ci.yml
+Dockerfile

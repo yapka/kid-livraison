@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: app-kid-prod
+
+bases:
+  - ../../base
+
+namePrefix: prod-
+
+commonLabels:
+  environment: prod
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: backend
+        namespace: app-kid-prod
+      spec:
+        replicas: 3
+    target:
+      kind: Deployment
+      name: backend
+  
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+        namespace: app-kid-prod
+      spec:
+        replicas: 3
+    target:
+      kind: Deployment
+      name: frontend
+  
+  # Augmentation des ressources pour prod
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: backend
+      spec:
+        template:
+          spec:
+            containers:
+              - name: backend
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "500m"
+                  limits:
+                    memory: "1Gi"
+                    cpu: "2000m"
+    target:
+      kind: Deployment
+      name: backend
+
+configMapGenerator:
+  - name: backend-config
+    behavior: merge
+    literals:
+      - DEBUG=False
+      - ALLOWED_HOSTS=*.app-kid-prod.svc.cluster.local,kid-livraison.example.com,api.kid-livraison.example.com
+
+images:
+  - name: ghcr.io/VOTRE_ORG/kid-backend
+    newTag: v1.0.0  # Tag version fixe pour prod
+  - name: ghcr.io/VOTRE_ORG/kid-frontend
+    newTag: v1.0.0  # Tag version fixe pour prod
+
+replicas:
+  - name: postgres
+    count: 1

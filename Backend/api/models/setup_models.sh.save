@@ -1,0 +1,111 @@
+#!/bin/bash
+
+# --- CONFIGURATION ---
+APP_NAME="NOM_DE_TON_APP" # <--- METS LE NOM DE TON APP ICI
+MODELS_DIR="models"
+
+# Créer le dossier s'il n'existe pas
+mkdir -p $MODELS_DIR
+
+echo "Création des fichiers modèles dans $MODELS_DIR..."
+
+# 1. UtilisateurModel.py
+cat <<EOF > $MODELS_DIR/UtilisateurModel.py
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class UtilisateurModel(AbstractUser):
+    ROLES = (('ADMIN', 'ADMIN'), ('OPERATEUR', 'OPERATEUR'), ('LIVREUR', 'LIVREUR'))
+    telephone = models.CharField(max_length=20)
+    role = models.CharField(max_length=20, choices=ROLES, default='OPERATEUR')
+    actif = models.BooleanField(default=True)
+    derniere_connexion = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        app_label = '$APP_NAME'
+EOF
+
+# 2. ExpediteurModel.py
+cat <<EOF > $MODELS_DIR/ExpediteurModel.py
+from django.db import models
+
+class ExpediteurModel(models.Model):
+    nom_complet = models.CharField(max_length=200)
+    telephone = models.CharField(max_length=20)
+    email = models.EmailField(null=True, blank=True)
+    adresse_complete = models.TextField()
+    ville = models.CharField(max_length=100)
+    quartier = models.CharField(max_length=100)
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = '$APP_NAME'
+EOF
+
+# 3. DestinataireModel.py
+cat <<EOF > $MODELS_DIR/DestinataireModel.py
+from django.db import models
+
+class DestinataireModel(models.Model):
+    nom_complet = models.CharField(max_length=200)
+    telephone = models.CharField(max_length=20)
+    email = models.EmailField(null=True, blank=True)
+    adresse_complete = models.TextField()
+    ville = models.CharField(max_length=100)
+    quartier = models.CharField(max_length=100)
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = '$APP_NAME'
+EOF
+
+# 4. ColisModel.py
+cat <<EOF > $MODELS_DIR/ColisModel.py
+from django.db import models
+from .UtilisateurModel import UtilisateurModel
+from .ExpediteurModel import ExpediteurModel
+from .DestinataireModel import DestinataireModel
+
+class ColisModel(models.Model):
+    TYPES = [('DOCUMENT', 'DOCUMENT'), ('STANDARD', 'STANDARD'), ('FRAGILE', 'FRAGILE'), ('VOLUMINEUX', 'VOLUMINEUX')]
+    STATUTS = [('EN_ATTENTE', 'EN_ATTENTE'), ('EN_TRANSIT', 'EN_TRANSIT'), ('LIVRE', 'LIVRE')]
+
+    numero_suivi = models.CharField(max_length=50, unique=True)
+    expediteur = models.ForeignKey(ExpediteurModel, on_delete=models.CASCADE)
+    destinataire = models.ForeignKey(DestinataireModel, on_delete=models.CASCADE)
+    utilisateur = models.ForeignKey(UtilisateurModel, on_delete=models.SET_NULL, null=True)
+    poids = models.DecimalField(max_digits=6, decimal_places=2)
+    type_colis = models.CharField(max_length=20, choices=TYPES, default='STANDARD')
+    statut = models.CharField(max_length=20, choices=STATUTS, default='EN_ATTENTE')
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = '$APP_NAME'
+EOF
+
+# 5. LivreurModel.py
+cat <<EOF > $MODELS_DIR/LivreurModel.py
+from django.db import models
+from .UtilisateurModel import UtilisateurModel
+
+class LivreurModel(models.Model):
+    utilisateur = models.OneToOneField(UtilisateurModel, on_delete=models.CASCADE)
+    matricule = models.CharField(max_length=50, unique=True)
+    telephone_pro = models.CharField(max_length=20)
+    date_embauche = models.DateField()
+
+    class Meta:
+        app_label = '$APP_NAME'
+EOF
+
+# 6. __init__.py (L'index du package)
+cat <<EOF > $MODELS_DIR/__init__.py
+from .UtilisateurModel import UtilisateurModel
+from .ExpediteurModel import ExpediteurModel
+from .DestinataireModel import DestinataireModel
+from .ColisModel import ColisModel
+from .LivreurModel import LivreurModel
+EOF
+
+chmod +x $MODELS_DIR/*.py
+echo "Terminé ! Structure créée dans le dossier $MODELS_DIR."

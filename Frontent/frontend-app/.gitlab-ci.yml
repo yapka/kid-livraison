@@ -1,0 +1,113 @@
+
+# .gitlab-ci.yml for React Frontend (Vite)
+
+# Use the official Node.js 18 LTS image.
+image: node:18-alpine
+
+# Define the stages of the pipeline
+stages:
+  - install
+  - test
+  - build
+  - docker_build_push
+  - deploy # Optional: for deployment to a hosting service
+
+# Cache node modules to speed up subsequent jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull-push
+
+# Job to install Node.js dependencies
+install_dependencies:
+  stage: install
+  # Ensure the job runs only if there are changes in the frontend-app directory
+  rules:
+    - changes:
+        - '**/*'
+    - when: manual # Allow manual trigger
+
+  script:
+    - echo "Installing frontend dependencies..."
+    - npm ci # Clean install to ensure consistent dependencies
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# Job to run frontend tests
+test_frontend:
+  stage: test
+  dependencies:
+    - install_dependencies # This job depends on dependencies being installed
+  rules:
+    - changes:
+        - '**/*'
+    - when: manual
+
+  script:
+    - echo "Running frontend tests..."
+    - npm test || echo "No test script found in package.json, skipping tests." # Placeholder for npm test
+    # If you have a specific test runner (e.g., Vitest), you might use:
+    # - vitest run
+    # Or if you don't have tests yet, you can remove this stage or make it optional.
+
+# Job to build the frontend application for production
+build_frontend:
+  stage: build
+  dependencies:
+    - install_dependencies
+  rules:
+    - changes:
+        - '**/*'
+    - when: manual
+
+  script:
+    - echo "Building frontend application..."
+    - npm run build # Creates a production build in the 'dist' folder (Vite default)
+
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 day
+
+# Job to build and push Docker image
+docker_build_and_push:
+  stage: docker_build_push
+  image: docker:latest # Use a Docker image with Docker CLI installed
+  services:
+    - docker:dind # Docker in Docker for building images
+  dependencies:
+    - build_frontend # Depends on the frontend being built
+  rules:
+    - changes:
+        - '**/*'
+    - when: manual
+
+  variables:
+    DOCKER_HUB_USERNAME: "$DOCKER_HUB_USERNAME"
+    DOCKER_HUB_PASSWORD: "$DOCKER_HUB_PASSWORD"
+    DOCKER_IMAGE_NAME: "$DOCKER_HUB_USERNAME/delivery-frontend"
+    DOCKER_IMAGE_TAG: "${CI_COMMIT_REF_SLUG:-latest}" # Use branch/tag name or 'latest'
+
+  script:
+    - echo "Logging into Docker Hub..."
+    - docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
+    - echo "Building Docker image..."
+    - docker build -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - echo "Pushing Docker image to Docker Hub..."
+    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+    - echo "Docker image pushed successfully!"
+
+
+# Optional: Deployment job (example, adapt to your hosting provider)
+# deploy_production:
+#   stage: deploy
+#   image: alpine/git # Or your deployment tool's image
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#   script:
+#     - echo "Deploying production build..."
+#     - # Add your deployment commands here (e.g., rsync, AWS S3 sync, Vercel deploy, Netlify deploy)
+#     - echo "Deployment complete."

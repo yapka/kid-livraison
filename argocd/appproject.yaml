@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kid-livraison
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Projet KID Livraison - Gestion de livraison de colis
+  
+  # Sources autorisées
+  sourceRepos:
+    - '*'  # Permet tous les repos, à restreindre en production avec l'URL exacte
+  
+  # Destinations autorisées
+  destinations:
+    - namespace: 'app-kid-*'
+      server: https://kubernetes.default.svc
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  
+  # Ressources Kubernetes autorisées
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRole
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRoleBinding
+  
+  # Ressources du namespace autorisées
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: Service
+    - group: ''
+      kind: ConfigMap
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: PersistentVolumeClaim
+    - group: 'apps'
+      kind: Deployment
+    - group: 'apps'
+      kind: StatefulSet
+    - group: 'networking.k8s.io'
+      kind: Ingress
+    - group: 'networking.k8s.io'
+      kind: NetworkPolicy
+  
+  # Rôles RBAC
+  roles:
+    - name: dev-role
+      description: Rôle pour les développeurs
+      policies:
+        - p, proj:kid-livraison:dev-role, applications, get, kid-livraison/*, allow
+        - p, proj:kid-livraison:dev-role, applications, sync, kid-livraison/*-dev, allow
+      groups:
+        - kid-dev-team
+    
+    - name: ops-role
+      description: Rôle pour les ops
+      policies:
+        - p, proj:kid-livraison:ops-role, applications, *, kid-livraison/*, allow
+      groups:
+        - kid-ops-team
+  
+  # Sync windows (fenêtres de synchronisation)
+  syncWindows:
+    - kind: allow
+      schedule: '0 8-18 * * *'  # Lundi-Vendredi 8h-18h
+      duration: 1h
+      applications:
+        - '*-dev'
+      manualSync: true
+    
+    - kind: allow
+      schedule: '0 20-23 * * 1-5'  # Lundi-Vendredi 20h-23h pour staging
+      duration: 3h
+      applications:
+        - '*-staging'
+      manualSync: true
+    
+    - kind: deny
+      schedule: '0 0-6 * * 0,6'  # Weekend nuits pour prod
+      duration: 6h
+      applications:
+        - '*-prod'

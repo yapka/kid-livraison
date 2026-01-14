@@ -1,0 +1,15 @@
+# helm/values.yaml
+namespace: app-kid
+createNamespace: false
+backend:
+  image: backend:latest
+  replicas: 1
+frontend:
+  image: frontend:latest
+  replicas: 1
+postgres:
+  image: postgres:15
+  storage: 1Gi
+  db: appkid
+  user: appkiduser
+  password: appkidpass

@@ -1,0 +1,211 @@
+
+:root {
+  --primary-color: #111827; /* Noir principal */
+  --primary-dark-color: #45a049;
+  --secondary-color: #007bff; /* Bleu pour les liens et actions secondaires */
+  --secondary-dark-color: #0056b3;
+  --background-color: #f4f7f6;
+  --surface-color: #ffffff;
+  --text-color: #333;
+  --text-light-color: #ffffff;
+  --border-color: #ddd;
+  --border-light-color: #e0e0e0;
+  --error-color: #dc3545; /* Rouge pour les erreurs */
+  --warning-color: #ffc107; /* Jaune pour les avertissements */
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+/* Basic Form Styling */
+form {
+  background: var(--surface-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form input[type="date"],
+form textarea,
+form select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+form input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+form button {
+  background-color: var(--primary-color);
+  color: var(--text-light-color);
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: var(--primary-dark-color);
+}
+
+form button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: var(--surface-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table th,
+table td {
+  border: 1px solid var(--border-light-color);
+  padding: 12px 15px;
+  text-align: left;
+}
+
+table th {
+  background-color: var(--background-color);
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Legacy link and navbar styles removed to avoid conflicts with tokenized theme and component styles. */
+/* Use `src/index.css` and `src/components/Navbar.css` for consistent link and navbar styling. */
+
+/* Footer Styling */
+footer {
+  background-color: var(--text-color);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 1.2rem;
+  color: var(--text-light-color);
+}
+
+/* Error messages */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* General button styles for actions (can be customized) */
+button {
+  background-color: var(--primary-color);
+  color: var(--text-light-color);
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-dark-color);
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Specific button styles for danger actions */
+.button-danger {
+  background-color: var(--error-color);
+}
+
+.button-danger:hover {
+  background-color: var(--error-color); /* You can define a darker error color variable if needed */
+}

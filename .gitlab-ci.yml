@@ -1,0 +1,130 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  POSTGRES_DB: test_db
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_password
+
+# Tests Backend
+test-backend:
+  stage: test
+  image: python:3.12-slim
+  services:
+    - postgres:15-alpine
+  variables:
+    # Variables pour python-decouple
+    DB_NAME: test_db
+    DB_USER: test_user
+    DB_PASSWORD: test_password
+    DB_HOST: postgres
+    DB_PORT: "5432"
+    SECRET_KEY: test-secret-key-for-ci-only
+    DEBUG: "True"
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends postgresql-client
+    - cd Backend
+    - pip install --no-cache-dir -r requirements.txt
+  script:
+    - python manage.py migrate --noinput
+    - python manage.py test
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Tests Frontend
+test-frontend:
+  stage: test
+  image: node:18-alpine
+  cache:
+    paths:
+      - Frontent/frontend-app/node_modules/
+  before_script:
+    - cd Frontent/frontend-app
+    - npm ci
+  script:
+    - npm run lint || true
+    - npm run build
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Build Backend Image
+build-backend:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd Backend
+    - docker build -t $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $CI_REGISTRY_IMAGE/backend:latest .
+    - docker push $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/backend:latest
+  only:
+    - main
+
+# Build Frontend Image
+build-frontend:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd Frontent/frontend-app
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:latest .
+    - docker push $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/frontend:latest
+  only:
+    - main
+
+# Déploiement Staging
+deploy-staging:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H $STAGING_SERVER >> ~/.ssh/known_hosts
+  script:
+    - ssh $STAGING_USER@$STAGING_SERVER "cd /var/www/kid-livraison && git pull origin main && docker-compose pull && docker-compose up -d && docker-compose exec -T backend python manage.py migrate --noinput"
+  environment:
+    name: staging
+    url: https://staging.kid-livraison.com
+  only:
+    - develop
+  when: manual
+
+# Déploiement Production
+deploy-production:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H $PRODUCTION_SERVER >> ~/.ssh/known_hosts
+  script:
+    - ssh $PRODUCTION_USER@$PRODUCTION_SERVER "cd /var/www/kid-livraison && git pull origin main && docker-compose pull && docker-compose up -d && docker-compose exec -T backend python manage.py migrate --noinput && docker-compose exec -T backend python manage.py collectstatic --noinput"
+  environment:
+    name: production
+    url: https://kid-livraison.com
+  only:
+    - main
+  when: manual

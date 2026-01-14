@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kid-livraison-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    environment: prod
+    project: kid-livraison
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.slack: kid-deployments
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: kid-alerts
+spec:
+  project: kid-livraison
+  
+  source:
+    repoURL: https://github.com/VOTRE_ORG/VOTRE_REPO.git  # À MODIFIER
+    targetRevision: main
+    path: gitops/overlays/prod
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app-kid-prod
+  
+  syncPolicy:
+    automated:
+      prune: false       # Désactivé pour prod - sync manuel uniquement
+      selfHeal: false    # Désactivé pour prod
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: ''
+      kind: Secret
+      jsonPointers:
+        - /data

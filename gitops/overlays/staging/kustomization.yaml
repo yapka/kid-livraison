@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: app-kid-staging
+
+bases:
+  - ../../base
+
+namePrefix: staging-
+
+commonLabels:
+  environment: staging
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: backend
+        namespace: app-kid-staging
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: backend
+  
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+        namespace: app-kid-staging
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: frontend
+
+configMapGenerator:
+  - name: backend-config
+    behavior: merge
+    literals:
+      - DEBUG=False
+      - ALLOWED_HOSTS=*.app-kid-staging.svc.cluster.local,staging.kid-livraison.example.com
+
+images:
+  - name: ghcr.io/VOTRE_ORG/kid-backend
+    newTag: staging-latest
+  - name: ghcr.io/VOTRE_ORG/kid-frontend
+    newTag: staging-latest
+
+replicas:
+  - name: postgres
+    count: 1

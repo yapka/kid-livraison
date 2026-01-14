@@ -1,0 +1,4 @@
+apiVersion: v2
+name: app-kid
+version: 0.1.0
+description: Chart Helm pour le projet app-kid

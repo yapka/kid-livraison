@@ -1,0 +1,70 @@
+/* Print stylesheet for receipts and thermal labels */
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+/* Thermal label specific page size 102mm x 152mm */
+@page thermal-label {
+  size: 102mm 152mm;
+  margin: 0;
+}
+
+.print-area {
+  background: white;
+  color: black;
+}
+
+.thermal-label {
+  width: 102mm;
+  height: 152mm;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+@media print {
+
+  /* Hide everything except the print area */
+  body * {
+    visibility: hidden !important;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide buttons and non-printable elements */
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  /* Ensure thermal labels use their own page size */
+  .thermal-label {
+    page: thermal-label;
+  }
+
+  /* Better print layout */
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* Avoid breaking inside content blocks */
+  div {
+    page-break-inside: avoid;
+  }
+}

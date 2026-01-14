@@ -1,0 +1,372 @@
+/* Style moderne et professionnel - Police Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+@layer base {
+
+  html,
+  body {
+    font-family: 'Fredoka', 'Inter', 'Plus Jakarta Sans', Arial, sans-serif;
+  }
+
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 0 0% 20%;
+    /* Noir doux minimaliste */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 30%;
+    /* Gris foncé */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 97%;
+    --ring: 0 0% 20%;
+    --radius: 0.25rem;
+
+    /* Aliases for legacy variables used across CSS */
+    --text-color: hsl(var(--foreground));
+    --background-color: hsl(var(--background));
+    --surface-color: hsl(var(--card));
+    --border-color: hsl(var(--border));
+    --primary-color: hsl(var(--primary));
+    --primary-foreground: hsl(var(--primary-foreground));
+    --text-secondary-color: hsl(var(--muted));
+    --bg-2: hsl(var(--input));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0;
+
+  color: var(--text-color);
+  background-color: var(--background-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+  text-decoration-skip-ink: auto;
+}
+
+/* no underline on hover for app links — use color or background for affordance */
+a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* focus outlines for keyboard users */
+a:focus,
+button:focus,
+input:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+@media (max-width:1024px) {
+
+  /* collapse main content margin and make room for topbar on tablet and smaller */
+  .app-main {
+    margin-left: 0;
+    padding-top: 72px;
+  }
+}
+
+
+h1 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Button base: no longer forces primary color on every button */
+button {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  padding: 0.5em 1em;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s ease-in-out, transform 0.06s;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  /* ensure buttons never underline */
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+/* Utility button classes to keep consistent styling */
+.btn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color)
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color)
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.12);
+  outline-offset: 2px
+}
+
+
+/* Layout: push main content when sidebar is present */
+.app-main {
+  margin-left: 240px;
+  /* width of sidebar */
+  padding: 20px;
+  transition: margin-left .22s ease-in-out;
+}
+
+/* Collapsed sidebar: apply when body has class set by JS */
+.sidebar-collapsed .app-main {
+  margin-left: 72px;
+}
+
+/* Mobile: remove left margin and add top padding for mobile topbar */
+@media (max-width:720px) {
+  .app-main {
+    margin-left: 0;
+    padding-top: 72px
+  }
+}
+
+/* Design: generous spacing & clear typography */
+:root {
+  --container-max: 1200px;
+  --gutter: 24px;
+  --card-radius: 8px;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Headings */
+/* h1 already declared with full rules above; avoid duplicate */
+
+h2 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+
+h3 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+@media (min-width: 768px) {
+  h3 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Paragraphs and small text */
+
+p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary-color);
+}
+
+@media (min-width: 768px) {
+  p {
+    font-size: 1rem;
+  }
+}
+
+small {
+  color: var(--text-secondary-color);
+}
+
+/* Cards / surfaces */
+.card {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  padding: 18px;
+  box-shadow: none;
+  /* minimal corporate */
+}
+
+/* Form inputs */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-color);
+  font-size: 0.98rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+thead th {
+  background: var(--bg-2);
+  color: var(--text-color);
+  font-weight: 700
+}
+
+/* Buttons: primary / ghost (duplicate removed — using utility .btn definitions above) */
+/* .btn styles are defined earlier under "Utility button classes" to avoid duplication */
+
+/* Spacing utilities */
+.mt-1 {
+  margin-top: 8px
+}
+
+.mt-2 {
+  margin-top: 12px
+}
+
+.mt-3 {
+  margin-top: 18px
+}
+
+.mb-1 {
+  margin-bottom: 8px
+}
+
+.mb-2 {
+  margin-bottom: 12px
+}
+
+.mb-3 {
+  margin-bottom: 18px
+}
+
+.p-1 {
+  padding: 8px
+}
+
+.p-2 {
+  padding: 12px
+}
+
+.p-3 {
+  padding: 18px
+}
+
+/* Auth wrapper to remove sidebar offset and center auth pages */
+.auth-wrapper>.app-main {
+  margin-left: 0;
+  padding-top: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+.auth-wrapper {
+  background: var(--surface-color)
+}
+
+/* Ensure light theme is consistent with new palette */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+
+  a:hover {
+    color: var(--primary-color);
+  }
+
+  /* Do not force global button backgrounds in light mode; use .btn-primary for primary buttons */
+}
