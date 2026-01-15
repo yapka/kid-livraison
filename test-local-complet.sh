@@ -68,7 +68,7 @@ docker run -d \
   -e CORS_ALLOWED_ORIGINS=http://localhost:3001 \
   -p 8001:8000 \
   kid-test-backend:latest \
-  sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  sh -c "python manage.py migrate && python create_superuser.py && python manage.py runserver 0.0.0.0:8000"
 
 echo -e "${YELLOW}⏳ Attente Backend (30s)...${NC}"
 sleep 30
